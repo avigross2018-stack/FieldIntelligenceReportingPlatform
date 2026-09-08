@@ -1,0 +1,154 @@
+# =========================
+# Python
+# =========================
+
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Python tooling / caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pyre/
+.pytype/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+
+# Packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+wheels/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# =========================
+# C# / .NET
+# =========================
+
+# Build results
+bin/
+obj/
+[Bb]uild/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+
+# Visual Studio user files
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio folders
+.vs/
+
+# Test results
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+# NuGet
+packages/
+*.nupkg
+*.snupkg
+
+# Keep NuGet lock files tracked when used
+# packages.lock.json
+
+# Publish output
+publish/
+
+# =========================
+# IDE / Editors
+# =========================
+
+# VS Code local settings
+.vscode/
+!.vscode/extensions.json
+
+# JetBrains Rider / IntelliJ
+.idea/
+*.sln.iml
+
+# =========================
+# Environment / Secrets
+# =========================
+
+.env
+.env.*
+!.env.example
+
+# ASP.NET local development secrets/config
+appsettings.Development.json
+appsettings.Local.json
+appsettings.*.Local.json
+
+# Python local config/secrets
+*.local
+secrets.json
+
+# =========================
+# Logs / Temporary files
+# =========================
+
+*.log
+logs/
+tmp/
+temp/
+*.tmp
+*.temp
+*.bak
+*.swp
+*~
+
+# =========================
+# Databases / local data
+# =========================
+
+*.db
+*.sqlite
+*.sqlite3
+
+# =========================
+# OS files
+# =========================
+
+# Linux
+.directory
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# =========================
+# Docker / local overrides
+# =========================
+
+docker-compose.override.yml
+compose.override.yml
+
+# =========================
+# Misc
+# =========================
+
+.cache/
