@@ -25,13 +25,15 @@ def main():
     try:
         log.info("Loading raw JSON file")
         with open("field_reports.json", "r") as f:
-            for line in f:
-                producer.produce(RAW_TOPIC, line)
-                # producer.poll(1)
-                log.info("Produce raw data successfully %s", line)
-                print(counter)
-                counter += 1
-            producer.flush()
+            load = json.load(f)
+        for line in load:
+            string = json.dumps(line)
+            producer.produce(RAW_TOPIC, string)
+            # producer.poll(1)
+            log.info("Produce raw data successfully %s", string)
+            print(counter)
+            counter += 1
+        producer.flush()
 
     except(FileNotFoundError):
         log.error("Failed to load JSON File, File does not exist")
