@@ -29,4 +29,11 @@ Console.CancelKeyPress += (_, e) =>
     cts.Cancel();
 };
 
-await consumer.RunAsync(cts.Token, configuration["Kafka:RawTopic"]);
+try
+{
+    await consumer.RunAsync(cts.Token, configuration["Kafka:RawTopic"]);
+}
+catch(Exception ex)
+{
+    System.Console.WriteLine($"ERROR: {ex.Message}");
+}

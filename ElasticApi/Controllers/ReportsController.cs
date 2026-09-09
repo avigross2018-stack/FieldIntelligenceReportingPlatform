@@ -1,0 +1,44 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Elastic.Clients.Elasticsearch;
+using ElasticApi.Models;
+using ElasticApi.Repos;
+using Microsoft.AspNetCore.Mvc;
+
+namespace ElasticApi.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class ReportsController : ControllerBase
+    {
+        private readonly IElasticRepo _elasticRepo;
+        public ReportsController(IElasticRepo elasticRepo)
+        {
+            _elasticRepo = elasticRepo;
+        }
+
+        [HttpGet("search")]
+        public async Task<ActionResult<IEnumerable<Report>>> SearchMessage(string text)
+        {
+            return Ok(await _elasticRepo.SearchMessage(text));
+        }
+
+        [HttpGet("subjects/{subjectId}")]
+        public async Task<ActionResult<IEnumerable<Report>>> SearchBySubjectId(string subjectId)
+        {
+            return Ok(await _elasticRepo.SearchBySubjectId(subjectId));
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Report>>> SearchByActionArea(
+            string? sector,
+            string? theater,
+            string? location
+            )
+        {
+            return Ok(await _elasticRepo.SearchByActivityArea(sector, theater, location));
+        }
+    }
+}

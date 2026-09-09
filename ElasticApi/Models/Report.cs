@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DataConsumer.Models
+namespace ElasticApi.Models
 {
     public class Report
     {
@@ -42,6 +42,6 @@ namespace DataConsumer.Models
         public string message { get; set; }
         
         public string? subjectId { get; set; }
-        public string? subjectType { get; set; }
+        public string? subjectType { get; set; }        
     }
 }
