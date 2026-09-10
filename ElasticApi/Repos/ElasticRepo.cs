@@ -13,13 +13,16 @@ namespace ElasticApi.Repos
     {
         private readonly ElasticsearchClient _client;
         private readonly string _indexName;
+        private readonly ILogger<ElasticRepo> _logger;
         public ElasticRepo(
             ElasticsearchClient client,
-            IConfiguration config
+            IConfiguration config,
+            ILogger<ElasticRepo> logger
             )
         {
             _client = client;
             _indexName = config["Elastic:IndexName"];
+            _logger = logger;
         }
 
         public async Task<IEnumerable<Report>> SearchMessage(string text)
@@ -33,7 +36,8 @@ namespace ElasticApi.Repos
 
             if (!response.IsValidResponse)
             {
-                Console.WriteLine(response.DebugInformation);
+                // Console.WriteLine(response.DebugInformation);
+                _logger.LogWarning("Failed to search a message");
                 throw new InvalidElasticInteractionException("Failed to search a message");
             }
 
@@ -51,7 +55,8 @@ namespace ElasticApi.Repos
 
             if (!response.IsValidResponse)
             {
-                Console.WriteLine(response.DebugInformation);
+                // Console.WriteLine(response.DebugInformation);
+                _logger.LogWarning("Failed to search a message");
                 throw new InvalidElasticInteractionException("Failed to search a message");
             }
             return response.Documents;
@@ -83,7 +88,8 @@ namespace ElasticApi.Repos
             
             if (!response.IsValidResponse)
             {
-                Console.WriteLine(response.DebugInformation);
+                // Console.WriteLine(response.DebugInformation);
+                _logger.LogWarning("Failed to search By Activity Area");
                 throw new InvalidElasticInteractionException("Failed to search By Activity Area");
             }
             return response.Documents;

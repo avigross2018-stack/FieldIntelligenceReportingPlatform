@@ -34,33 +34,33 @@ namespace DataConsumer.Services
                 return true;
             }
 
-            var response = await _client.Indices.CreateAsync<Report>(c => c
+            var response = await _client.Indices.CreateAsync<ReportElastic>(c => c
                 .Index(indexName)
                 .Mappings(m => m
                     .Properties(p => p
-                        .Keyword(k => k.reportId)
-                        .Date(k => k.timestamp)
-                        .Keyword(k => k.agentId)
-                        .Keyword(k => k.unit)
-                        .Keyword(k => k.theater)
-                        .Keyword(k => k.sector)
-                        .Keyword(k => k.location)
-                        .Keyword(k => k.reportType)
-                        .Keyword(k => k.priority)
-                        .Keyword(k => k.sourceType)
-                        .Text(k => k.message)
-                        .Keyword(k => k.subjectId!)
-                        .Keyword(k => k.subjectType!)
+                        .Keyword(k => k.ReportId)
+                        .Date(k => k.Timestamp)
+                        .Keyword(k => k.AgentId)
+                        .Keyword(k => k.Unit)
+                        .Keyword(k => k.Theater)
+                        .Keyword(k => k.Sector)
+                        .Keyword(k => k.Location)
+                        .Keyword(k => k.ReportType)
+                        .Keyword(k => k.Priority)
+                        .Keyword(k => k.SourceType)
+                        .Text(k => k.Message)
+                        .Keyword(k => k.SubjectId!)
+                        .Keyword(k => k.SubjectType!)
                         )));
 
             return response.IsValidResponse;
         }
 
-        public async Task<bool> IndexDoc(Report report)
+        public async Task<bool> IndexDoc(ReportElastic report)
         {
             var response = await _client.IndexAsync(report, i => i
                 .Index("reports")
-                .Id(report.reportId));
+                .Id(report.ReportId).OpType(OpType.Create));
 
             return response.IsValidResponse;
         }

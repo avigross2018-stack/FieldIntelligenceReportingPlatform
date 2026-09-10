@@ -6,42 +6,42 @@ using System.Threading.Tasks;
 
 namespace DataConsumer.Models
 {
-    public class Report
+    public class ReportJson
     {
         [Required(AllowEmptyStrings =false)]
-        public string reportId { get; set; }
+        public string ReportId { get; set; }
 
         [Required(AllowEmptyStrings =false)]
-        public DateTime timestamp { get; set; }
+        public DateTimeOffset Timestamp { get; set; }
 
         [Required(AllowEmptyStrings =false)]
-        public string agentId { get; set; }
+        public string AgentId { get; set; }
 
         [Required(AllowEmptyStrings =false)]
-        public string unit { get; set; }
+        public string Unit { get; set; }
 
         [Required(AllowEmptyStrings =false)]
-        public string theater { get; set; }
+        public string Theater { get; set; }
 
         [Required(AllowEmptyStrings =false)]
-        public string sector { get; set; }
+        public string Sector { get; set; }
 
         [Required(AllowEmptyStrings =false)]
-        public string location { get; set; }
+        public string Location { get; set; }
 
         [Required(AllowEmptyStrings =false)]
-        public string reportType { get; set; }
+        public string ReportType { get; set; }
 
         [Required(AllowEmptyStrings =false)]
-        public string priority { get; set; }
+        public string Priority { get; set; }
 
         [Required(AllowEmptyStrings =false)]
-        public string sourceType { get; set; }
+        public string SourceType { get; set; }
 
         [Required(AllowEmptyStrings =false)]
-        public string message { get; set; }
+        public string Message { get; set; }
         
-        public string? subjectId { get; set; }
-        public string? subjectType { get; set; }
+        public string? SubjectId { get; set; }
+        public string? SubjectType { get; set; }           
     }
 }

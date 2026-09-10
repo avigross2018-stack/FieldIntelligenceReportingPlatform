@@ -14,9 +14,11 @@ namespace ElasticApi.Controllers
     public class ReportsController : ControllerBase
     {
         private readonly IElasticRepo _elasticRepo;
-        public ReportsController(IElasticRepo elasticRepo)
+        private readonly ILogger<ReportsController> _logger;
+        public ReportsController(IElasticRepo elasticRepo, ILogger<ReportsController> logger)
         {
             _elasticRepo = elasticRepo;
+            _logger = logger;
         }
 
         [HttpGet("search")]
