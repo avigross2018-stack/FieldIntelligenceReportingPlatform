@@ -1,6 +1,6 @@
 # FieldIntelligenceReportingPlatform
 
-just run
-//
+just run  
+```Shell
 docker compose up --build -d
-//
+```
