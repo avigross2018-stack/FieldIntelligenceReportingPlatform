@@ -28,7 +28,7 @@ namespace ElasticApi.Repos
                 .Indices(_indexName)
                 .Query(q => q
                     .MatchPhrase(m => m
-                        .Field(f => f.message)
+                        .Field(f => f.Message)
                         .Query(text))));
 
             if (!response.IsValidResponse)
@@ -46,7 +46,7 @@ namespace ElasticApi.Repos
                 .Indices(_indexName)
                 .Query(q => q
                     .Term(t => t
-                        .Field(f => f.subjectId)
+                        .Field(f => f.SubjectId)
                         .Value(subjectId))));
 
             if (!response.IsValidResponse)
@@ -63,17 +63,17 @@ namespace ElasticApi.Repos
 
             if (!string.IsNullOrWhiteSpace(sector))
             {
-                conditions.Add(q => q.Term(t => t.Field(f => f.sector).Value(sector)));
+                conditions.Add(q => q.Term(t => t.Field(f => f.Sector).Value(sector)));
             }
 
             if (!string.IsNullOrWhiteSpace(theater))
             {
-                conditions.Add(q => q.Term(t => t.Field(f => f.theater).Value(theater)));
+                conditions.Add(q => q.Term(t => t.Field(f => f.Theater).Value(theater)));
             }
 
             if (!string.IsNullOrWhiteSpace(location))
             {
-                conditions.Add(q => q.Term(t => t.Field(f => f.location).Value(location)));
+                conditions.Add(q => q.Term(t => t.Field(f => f.Location).Value(location)));
             }
 
             var response = await _client.SearchAsync<Report>(s => s
@@ -84,9 +84,44 @@ namespace ElasticApi.Repos
             if (!response.IsValidResponse)
             {
                 Console.WriteLine(response.DebugInformation);
-                throw new InvalidElasticInteractionException("Failed to search a message");
+                throw new InvalidElasticInteractionException("Failed to search By Activity Area");
             }
             return response.Documents;
         }
-    }
+
+        public async Task<IEnumerable<Report>> SearchByPriority(
+            string? priority, 
+            DateTime? from, 
+            DateTime? to)
+        {
+            var conditions = new List<Action<QueryDescriptor<Report>>>();
+
+            if (!string.IsNullOrWhiteSpace(priority))
+            {
+                var fixCase = char.ToUpper(priority[0]) + priority[1..];
+                conditions.Add(q => q.Term(t => t.Field(f => f.Priority).Value(fixCase)));
+            }
+
+            if (from.HasValue && from != null)
+            {
+                conditions.Add(q => q.Range(r => r.Date(d => d.Field(f => f.timestamp).Gte(from))));
+            }
+            if (to.HasValue && from != null)
+            {
+                conditions.Add(q => q.Range(r => r.Date(d => d.Field(f => f.timestamp).Lte(to))));
+            }
+
+            var response = await _client.SearchAsync<Report>(s => s
+                .Indices(_indexName)
+                .Size(1000)
+                .Query(q => q.Bool(b => b.Filter(conditions.ToArray()))));
+
+            if (!response.IsValidResponse)
+            {
+                Console.WriteLine(response.DebugInformation);
+                throw new InvalidElasticInteractionException("Failed to search By Priority");
+            }
+            return response.Documents;
+        }
+    }    
 }

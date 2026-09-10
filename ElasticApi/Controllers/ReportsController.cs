@@ -40,5 +40,15 @@ namespace ElasticApi.Controllers
         {
             return Ok(await _elasticRepo.SearchByActivityArea(sector, theater, location));
         }
+
+        [HttpGet("by-priority")]
+        public async Task<ActionResult<IEnumerable<Report>>> SearchByPriority(
+            string? priority,
+            DateTime? from,
+            DateTime? to
+        )
+        {
+            return Ok(await _elasticRepo.SearchByPriority(priority, from, to));
+        }
     }
 }

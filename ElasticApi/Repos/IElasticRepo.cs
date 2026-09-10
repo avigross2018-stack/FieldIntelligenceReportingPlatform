@@ -15,5 +15,9 @@ namespace ElasticApi.Repos
             string? theater,
             string? location
             );
+        Task<IEnumerable<Report>> SearchByPriority(
+            string? priority, 
+            DateTime? from, 
+            DateTime? to);
     }
 }
