@@ -50,5 +50,21 @@ namespace ElasticApi.Controllers
         {
             return Ok(await _elasticRepo.SearchByPriority(priority, from, to));
         }
+
+        [HttpGet("statistics")]
+        public async Task<ActionResult<object>> GetStatistics()
+        {
+            return Ok(await _elasticRepo.GetStatistics());
+        }
+
+        [HttpGet("full-search")]
+        public async Task<ActionResult<IEnumerable<Report>>> FullSearch(
+            string? text, string? sector, string? theater, 
+            string? location, string? priority, string? reportType, 
+            DateTime? from, DateTime? to
+        )
+        {
+            return Ok(await _elasticRepo.FullSearch(text, sector, theater, location, priority, reportType, from, to));
+        }
     }
 }

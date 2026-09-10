@@ -13,7 +13,8 @@ namespace ElasticApi.Models
         public string ReportId { get; set; }
 
         [Required(AllowEmptyStrings =false)]
-        public DateTimeOffset @timestamp { get; set; }
+        [JsonPropertyName("@timestamp")]
+        public DateTimeOffset Timestamp { get; set; }
 
         [Required(AllowEmptyStrings =false)]
         public string AgentId { get; set; }

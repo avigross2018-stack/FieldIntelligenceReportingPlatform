@@ -102,13 +102,13 @@ namespace ElasticApi.Repos
                 conditions.Add(q => q.Term(t => t.Field(f => f.Priority).Value(fixCase)));
             }
 
-            if (from.HasValue && from != null)
+            if (from.HasValue)
             {
-                conditions.Add(q => q.Range(r => r.Date(d => d.Field(f => f.timestamp).Gte(from))));
+                conditions.Add(q => q.Range(r => r.Date(d => d.Field(f => f.Timestamp).Gte(from))));
             }
-            if (to.HasValue && from != null)
+            if (to.HasValue)
             {
-                conditions.Add(q => q.Range(r => r.Date(d => d.Field(f => f.timestamp).Lte(to))));
+                conditions.Add(q => q.Range(r => r.Date(d => d.Field(f => f.Timestamp).Lte(to))));
             }
 
             var response = await _client.SearchAsync<Report>(s => s
@@ -121,6 +121,104 @@ namespace ElasticApi.Repos
                 Console.WriteLine(response.DebugInformation);
                 throw new InvalidElasticInteractionException("Failed to search By Priority");
             }
+            return response.Documents;
+        }
+
+        public async Task<object> GetStatistics()
+        {
+            var response = await _client.SearchAsync<Report>(s => s
+                .Indices(_indexName)
+                .Size(1000)
+                .Aggregations(a => a
+                    .Add("by_priority", ag => ag
+                        .Terms(i => i
+                            .Field(f => f.Priority)
+                            .Size(1000)))
+                    .Add("by_report_type", ag => ag
+                        .Terms(i => i
+                            .Field(f => f.ReportType)
+                            .Size(1000)))
+                    .Add("by_theater", ag => ag
+                        .Terms(i => i
+                            .Field(f => f.Theater)
+                            .Size(1000)))));
+
+            if (!response.IsValidResponse)
+            {
+                Console.WriteLine(response.DebugInformation);
+                throw new InvalidElasticInteractionException("Failed to get Statistics");
+            }
+
+            var priorityAgg = response.Aggregations?.GetStringTerms("by_priority");
+            var reportTypeAgg = response.Aggregations?.GetStringTerms("by_report_type");
+            var theaterAgg = response.Aggregations?.GetStringTerms("by_theater");
+
+            return new
+            {
+                ByPriority = priorityAgg?.Buckets.ToDictionary(
+                    b => b.Key.ToString(),
+                    b => b.DocCount) ?? [],
+
+                ByReportType = reportTypeAgg?.Buckets.ToDictionary(
+                    b => b.Key.ToString(),
+                    b => b.DocCount
+                ) ?? [],
+
+                ByTheater = theaterAgg?.Buckets.ToDictionary(
+                    b => b.Key.ToString(),
+                    b => b.DocCount
+                ) ?? []
+            };
+        }
+        public async Task<IEnumerable<Report>> FullSearch(
+            string? text, string? sector, string? theater, 
+            string? location, string? priority, string? reportType, 
+            DateTime? from, DateTime? to)
+        {
+            var cond = new List<Action<QueryDescriptor<Report>>>();
+
+            if (!string.IsNullOrWhiteSpace(text))
+            {
+                cond.Add(q => q.MatchPhrase(t => t.Field(f => f.Message).Query(text)));
+            }
+            if (!string.IsNullOrWhiteSpace(sector))
+            {
+                cond.Add(q => q.Term(t => t.Field(f => f.Sector).Value(sector)));
+            }
+            if (!string.IsNullOrWhiteSpace(theater))
+            {
+                cond.Add(q => q.Term(t => t.Field(f => f.Theater).Value(theater)));
+            }
+            if (!string.IsNullOrWhiteSpace(location))
+            {
+                cond.Add(q => q.Term(t => t.Field(f => f.Location).Value(location)));
+            }
+            if (!string.IsNullOrWhiteSpace(priority))
+            {
+                cond.Add(q => q.Term(t => t.Field(f => f.Priority).Value(priority)));
+            }
+            if (!string.IsNullOrWhiteSpace(priority))
+            {
+                cond.Add(q => q.Term(t => t.Field(f => f.Priority).Value(priority)));
+            }
+            if (!string.IsNullOrWhiteSpace(reportType))
+            {
+                cond.Add(q => q.Term(t => t.Field(f => f.ReportType).Value(reportType)));
+            }
+            if(from.HasValue)
+            {
+                cond.Add(q => q.Range(r => r.Date(d => d.Field(f => f.Timestamp).Gte(from))));
+            }
+            if(to.HasValue)
+            {
+                cond.Add(q => q.Range(r => r.Date(d => d.Field(f => f.Timestamp).Lte(to))));
+            }
+
+            var response = await _client.SearchAsync<Report>(s => s
+                .Indices(_indexName)
+                .Size(1000)
+                .Query(q => q.Bool( b=> b.Filter(cond.ToArray()))));
+
             return response.Documents;
         }
     }    

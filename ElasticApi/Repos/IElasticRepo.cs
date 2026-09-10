@@ -19,5 +19,16 @@ namespace ElasticApi.Repos
             string? priority, 
             DateTime? from, 
             DateTime? to);
+        Task<object> GetStatistics();
+        Task<IEnumerable<Report>> FullSearch(
+            string? text,
+            string? sector,
+            string? theater,
+            string? location,
+            string? priority,
+            string? reportType,
+            DateTime? from, 
+            DateTime? to
+        );
     }
 }
