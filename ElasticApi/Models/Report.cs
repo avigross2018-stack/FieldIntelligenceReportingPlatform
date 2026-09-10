@@ -42,6 +42,7 @@ namespace ElasticApi.Models
 
         [Required(AllowEmptyStrings =false)]
         public string Message { get; set; }
+        public DateTime? ProcessAt { get; set; }
         
         public string? SubjectId { get; set; }
         public string? SubjectType { get; set; }        

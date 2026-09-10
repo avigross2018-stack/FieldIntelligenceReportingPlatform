@@ -71,7 +71,8 @@ namespace DataConsumer.Services
                         SourceType = model.SourceType,
                         Message = model.Message,
                         SubjectId = model.SubjectId,
-                        SubjectType = model.SubjectType
+                        SubjectType = model.SubjectType,
+                        ProcessAt = DateTime.UtcNow
                     };
                     if (!_validator.ValidateData(elasticModel))
                     {
